@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">OS Maps</string>
+    <string name="search_hint">Search for a place…</string>
+    <string name="map_source_os">OS Maps API</string>
+    <string name="map_source_bing">Bing Maps (OS)</string>
+    <string name="error_tile_source">Could not load OS tile source, using Bing fallback</string>
+    <string name="error_search">Search failed. Check your API key and connection.</string>
+    <string name="no_results">No results found</string>
+</resources>

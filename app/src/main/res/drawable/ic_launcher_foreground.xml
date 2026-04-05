@@ -1,0 +1,52 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer compass ring -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:pathData="M54,18 A36,36 0 0,1 90,54 A36,36 0 0,1 54,90 A36,36 0 0,1 18,54 A36,36 0 0,1 54,18 Z"/>
+
+    <!-- Cardinal tick marks N/S/E/W -->
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="2.5"
+        android:pathData="M54,18 L54,24"/>
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="2.5"
+        android:pathData="M54,84 L54,90"/>
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="2.5"
+        android:pathData="M18,54 L24,54"/>
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="2.5"
+        android:pathData="M84,54 L90,54"/>
+
+    <!-- Intercardinal tick marks (NE/SE/SW/NW) -->
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="1.5"
+        android:pathData="M79.46,28.54 L75.22,32.78"/>
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="1.5"
+        android:pathData="M79.46,79.46 L75.22,75.22"/>
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="1.5"
+        android:pathData="M28.54,79.46 L32.78,75.22"/>
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="1.5"
+        android:pathData="M28.54,28.54 L32.78,32.78"/>
+
+    <!-- North pointer (orange) -->
+    <path
+        android:fillColor="#E8612A"
+        android:pathData="M54,27 L59,54 L54,51 L49,54 Z"/>
+
+    <!-- South pointer (white, slightly transparent) -->
+    <path
+        android:fillColor="#AAFFFFFF"
+        android:pathData="M54,81 L59,54 L54,57 L49,54 Z"/>
+
+    <!-- Center cap -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,50 A4,4 0 0,1 58,54 A4,4 0 0,1 54,58 A4,4 0 0,1 50,54 A4,4 0 0,1 54,50 Z"/>
+    <path
+        android:fillColor="#1B4A7A"
+        android:pathData="M54,52 A2,2 0 0,1 56,54 A2,2 0 0,1 54,56 A2,2 0 0,1 52,54 A2,2 0 0,1 54,52 Z"/>
+
+</vector>

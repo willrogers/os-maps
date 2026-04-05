@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Outer navy circle -->
+    <path
+        android:fillColor="#1B4A7A"
+        android:pathData="M12,2A10,10 0,1,1 2,12,10,10 0,0,1 12,2Z"/>
+    <!-- White ring -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,5A7,7 0,1,1 5,12,7,7 0,0,1 12,5Z"/>
+    <!-- Navy inner dot -->
+    <path
+        android:fillColor="#1B4A7A"
+        android:pathData="M12,8A4,4 0,1,1 8,12,4,4 0,0,1 12,8Z"/>
+</vector>

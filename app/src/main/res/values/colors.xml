@@ -1,0 +1,5 @@
+<resources>
+    <color name="os_green">#006E51</color>
+    <color name="os_green_dark">#004D38</color>
+    <color name="search_bg">#FFFFFFFF</color>
+</resources>
