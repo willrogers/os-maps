@@ -7,8 +7,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -62,7 +65,16 @@ class MainActivity : AppCompatActivity() {
 
         setupMap()
         setupSearch()
+        setupSearchToggle()
         setupLocationFab()
+    }
+
+    override fun onBackPressed() {
+        if (binding.searchCard.visibility == View.VISIBLE) {
+            collapseSearch()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -113,6 +125,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     // -------------------------------------------------------------------------
+    // Search expand / collapse
+    // -------------------------------------------------------------------------
+
+    private fun setupSearchToggle() {
+        binding.btnOpenSearch.setOnClickListener { expandSearch() }
+        binding.btnCloseSearch.setOnClickListener { collapseSearch() }
+    }
+
+    private fun expandSearch() {
+        TransitionManager.beginDelayedTransition(binding.rootLayout, AutoTransition())
+        binding.searchButton.visibility = View.GONE
+        binding.searchCard.visibility = View.VISIBLE
+        binding.searchView.requestFocus()
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        binding.searchView.post {
+            imm.showSoftInput(binding.searchView.findFocus(), InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
+    private fun collapseSearch() {
+        hideResults()
+        binding.searchView.setQuery("", false)
+        binding.searchView.clearFocus()
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.searchView.windowToken, 0)
+        TransitionManager.beginDelayedTransition(binding.rootLayout, AutoTransition())
+        binding.searchCard.visibility = View.GONE
+        binding.searchButton.visibility = View.VISIBLE
+    }
+
+    // -------------------------------------------------------------------------
     // Search
     // -------------------------------------------------------------------------
 
@@ -122,12 +165,6 @@ class MainActivity : AppCompatActivity() {
         binding.searchResults.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = searchAdapter
-        }
-
-        // Ensure tapping anywhere on the search view opens the keyboard
-        binding.searchView.setOnClickListener {
-            binding.searchView.isIconified = false
-            binding.searchView.requestFocusFromTouch()
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -142,7 +179,6 @@ class MainActivity : AppCompatActivity() {
                     hideResults()
                     return true
                 }
-                // Debounce: wait a short period before firing the network call
                 searchJob = lifecycleScope.launch {
                     delay(SEARCH_DEBOUNCE_MS)
                     runSearch(newText)
@@ -150,11 +186,6 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         })
-
-        // Dismiss results when search loses focus
-        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) hideResults()
-        }
     }
 
     private fun runSearch(query: String) {
@@ -176,10 +207,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSearchResultSelected(result: SearchResult) {
-        hideResults()
-        binding.searchView.clearFocus()
+        collapseSearch()
         val point = GeoPoint(result.lat, result.lon)
         map.controller.animateTo(point, RESULT_ZOOM, 800L)
+        map.post { map.invalidate() }
     }
 
     private fun hideResults() {
