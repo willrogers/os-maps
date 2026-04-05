@@ -1,9 +1,12 @@
 <resources>
     <style name="Theme.OSLeisureMaps" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/os_green</item>
-        <item name="colorPrimaryVariant">@color/os_green_dark</item>
+        <item name="colorPrimary">@color/navy</item>
+        <item name="colorPrimaryVariant">@color/navy_dark</item>
         <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorSecondary">@color/os_green</item>
+        <item name="colorSecondary">@color/os_orange</item>
         <item name="colorOnSecondary">@android:color/white</item>
+        <item name="android:statusBarColor">@color/navy</item>
+        <item name="android:navigationBarColor">@color/navy</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

@@ -25,7 +25,7 @@
         android:layout_marginTop="12dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="4dp"
-        app:cardBackgroundColor="#1B4A7A"
+        app:cardBackgroundColor="@color/navy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -108,7 +108,7 @@
         android:contentDescription="My location"
         android:src="@drawable/ic_my_location"
         app:fabSize="mini"
-        app:backgroundTint="#1B4A7A"
+        app:backgroundTint="@color/navy"
         app:tint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
