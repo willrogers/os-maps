@@ -1,6 +1,6 @@
-package com.example.osleisure.search
+package rs.wllrg.search
 
-import com.example.osleisure.util.ApiKeys
+import rs.wllrg.util.ApiKeys
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers

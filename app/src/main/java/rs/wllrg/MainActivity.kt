@@ -1,4 +1,4 @@
-package com.example.osleisure
+package rs.wllrg
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -16,12 +16,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.osleisure.databinding.ActivityMainBinding
-import com.example.osleisure.search.OSNamesService
-import com.example.osleisure.search.SearchAdapter
-import com.example.osleisure.search.SearchResult
-import com.example.osleisure.tile.BingTileSource
-import com.example.osleisure.tile.OSTileSource
+import rs.wllrg.databinding.ActivityMainBinding
+import rs.wllrg.search.OSNamesService
+import rs.wllrg.search.SearchAdapter
+import rs.wllrg.search.SearchResult
+import rs.wllrg.tile.BingTileSource
+import rs.wllrg.tile.OSTileSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
-import com.example.osleisure.location.CompassLocationProvider
+import rs.wllrg.location.CompassLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 class MainActivity : AppCompatActivity() {
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
      * Throws if the API key is still the placeholder, so we fall back to Bing.
      */
     private fun validateKey(sourceName: String) {
-        val key = com.example.osleisure.util.ApiKeys.OS_MAPS_KEY
+        val key = rs.wllrg.util.ApiKeys.OS_MAPS_KEY
         if (key == "YOUR_OS_MAPS_API_KEY") {
             throw IllegalStateException("OS Maps API key not set for $sourceName")
         }

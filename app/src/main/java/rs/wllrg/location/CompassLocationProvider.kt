@@ -1,4 +1,4 @@
-package com.example.osleisure.location
+package rs.wllrg.location
 
 import android.content.Context
 import android.hardware.Sensor

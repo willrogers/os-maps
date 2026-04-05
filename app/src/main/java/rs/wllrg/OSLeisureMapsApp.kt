@@ -1,4 +1,4 @@
-package com.example.osleisure
+package rs.wllrg
 
 import android.app.Application
 import org.osmdroid.config.Configuration

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.osleisure"
+    namespace = "rs.wllrg"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.osleisure"
+        applicationId = "rs.wllrg"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

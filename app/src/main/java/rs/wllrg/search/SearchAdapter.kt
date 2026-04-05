@@ -1,11 +1,11 @@
-package com.example.osleisure.search
+package rs.wllrg.search
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.osleisure.R
+import rs.wllrg.R
 
 class SearchAdapter(
     private val onResultClick: (SearchResult) -> Unit

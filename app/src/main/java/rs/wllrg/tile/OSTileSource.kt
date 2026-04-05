@@ -1,6 +1,6 @@
-package com.example.osleisure.tile
+package rs.wllrg.tile
 
-import com.example.osleisure.util.ApiKeys
+import rs.wllrg.util.ApiKeys
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.util.MapTileIndex
 
