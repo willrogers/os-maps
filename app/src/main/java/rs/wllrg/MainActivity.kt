@@ -208,10 +208,10 @@ class MainActivity : AppCompatActivity() {
     private fun enableMyLocation() {
         val existing = locationOverlay
         if (existing != null && existing.isMyLocationEnabled) {
-            // Already tracking — snap to last known position immediately if available,
-            // otherwise just re-enable follow and wait for the next update.
-            existing.enableFollowLocation()
-            existing.myLocation?.let { map.controller.animateTo(it) }
+            existing.myLocation?.let {
+                map.controller.animateTo(it)
+                map.post { map.invalidate() }
+            }
             return
         }
 
@@ -225,11 +225,10 @@ class MainActivity : AppCompatActivity() {
         val overlay = MyLocationNewOverlay(provider, map).apply {
             setDirectionArrow(arrow, arrow)
             enableMyLocation()
-            enableFollowLocation()
             runOnFirstFix {
                 runOnUiThread {
                     map.controller.animateTo(myLocation)
-                    map.invalidate()
+                    map.post { map.invalidate() }
                     setFabAcquiring(false)
                 }
             }

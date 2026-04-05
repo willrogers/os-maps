@@ -8,6 +8,8 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.Surface
 import android.view.WindowManager
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
@@ -35,6 +37,7 @@ class CompassLocationProvider(private val context: Context) :
 
     private var smoothedBearing = 0f
     private var consumer: IMyLocationConsumer? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     // -------------------------------------------------------------------------
     // Provider lifecycle
@@ -100,10 +103,10 @@ class CompassLocationProvider(private val context: Context) :
         smoothedBearing += 0.15f * angularDiff(smoothedBearing, azimuth)
         smoothedBearing = (smoothedBearing + 360f) % 360f
 
-        // Push the new bearing to the overlay without waiting for the next GPS fix.
+        // Post to main thread — OSMDroid's map controller must be called on the UI thread.
         val last = lastKnownLocation ?: return
         val updated = Location(last).apply { bearing = smoothedBearing }
-        consumer?.onLocationChanged(updated, this)
+        mainHandler.post { consumer?.onLocationChanged(updated, this) }
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
