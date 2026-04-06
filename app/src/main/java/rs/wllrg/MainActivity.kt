@@ -19,12 +19,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import rs.wllrg.databinding.ActivityMainBinding
-import rs.wllrg.search.OSNamesService
-import rs.wllrg.search.SearchAdapter
-import rs.wllrg.search.SearchResult
-import rs.wllrg.tile.BingTileSource
-import rs.wllrg.tile.OSTileSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,11 +26,16 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
-import rs.wllrg.location.CompassLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import rs.wllrg.databinding.ActivityMainBinding
+import rs.wllrg.location.CompassLocationProvider
+import rs.wllrg.search.OSNamesService
+import rs.wllrg.search.SearchAdapter
+import rs.wllrg.search.SearchResult
+import rs.wllrg.tile.BingTileSource
+import rs.wllrg.tile.OSTileSource
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var map: MapView
     private lateinit var searchAdapter: SearchAdapter
@@ -47,11 +46,13 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "OSLeisureMaps"
+
         // Centre of Great Britain (roughly), zoom 7 shows the whole of England/Wales/Scotland
         private val UK_CENTRE = GeoPoint(51.7440, -1.2351) // OX4 3SA
         private const val DEFAULT_ZOOM = 14.0
         private const val RESULT_ZOOM = 14.0
         private const val LOCATION_PERMISSION_REQUEST = 1001
+
         // Debounce delay so we don't fire a request on every keystroke
         private const val SEARCH_DEBOUNCE_MS = 400L
     }
@@ -86,12 +87,13 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "setupMap: starting")
 
         // Try OS Maps API first; fall back to Bing if the key looks unset
-        val tileSource = try {
-            OSTileSource().also { validateKey(it.name()) }.also { Log.d(TAG, "Using OS tile source") }
-        } catch (e: Exception) {
-            Log.d(TAG, "OS tile source failed (${e.message}), falling back to Bing")
-            BingTileSource()
-        }
+        val tileSource =
+            try {
+                OSTileSource().also { validateKey(it.name()) }.also { Log.d(TAG, "Using OS tile source") }
+            } catch (e: Exception) {
+                Log.d(TAG, "OS tile source failed (${e.message}), falling back to Bing")
+                BingTileSource()
+            }
         Log.d(TAG, "Calling setTileSource: ${tileSource.name()}")
         map.setTileSource(tileSource)
         Log.d(TAG, "setTileSource done")
@@ -103,23 +105,25 @@ class MainActivity : AppCompatActivity() {
 
         // Wait for the first layout pass so the MapView has a known size,
         // then set zoom/centre so OSMDroid can calculate which tiles to request.
-        map.viewTreeObserver.addOnGlobalLayoutListener(object :
-            android.view.ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                map.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                Log.d(TAG, "onGlobalLayout: map size ${map.width}x${map.height}, setting zoom/centre")
-                map.controller.setZoom(DEFAULT_ZOOM)
-                map.controller.setCenter(UK_CENTRE)
-            }
-        })
+        map.viewTreeObserver.addOnGlobalLayoutListener(
+            object :
+                android.view.ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    map.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    Log.d(TAG, "onGlobalLayout: map size ${map.width}x${map.height}, setting zoom/centre")
+                    map.controller.setZoom(DEFAULT_ZOOM)
+                    map.controller.setCenter(UK_CENTRE)
+                }
+            },
+        )
     }
 
     /**
      * Throws if the API key is still the placeholder, so we fall back to Bing.
      */
     private fun validateKey(sourceName: String) {
-        val key = rs.wllrg.util.ApiKeys.OS_MAPS_KEY
-        if (key == "YOUR_OS_MAPS_API_KEY") {
+        val key = BuildConfig.OS_MAPS_KEY
+        if (key.isBlank() || key == "YOUR_OS_MAPS_API_KEY") {
             throw IllegalStateException("OS Maps API key not set for $sourceName")
         }
     }
@@ -167,25 +171,28 @@ class MainActivity : AppCompatActivity() {
             adapter = searchAdapter
         }
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let { runSearch(it) }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchJob?.cancel()
-                if (newText.isNullOrBlank()) {
-                    hideResults()
+        binding.searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let { runSearch(it) }
                     return true
                 }
-                searchJob = lifecycleScope.launch {
-                    delay(SEARCH_DEBOUNCE_MS)
-                    runSearch(newText)
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    searchJob?.cancel()
+                    if (newText.isNullOrBlank()) {
+                        hideResults()
+                        return true
+                    }
+                    searchJob =
+                        lifecycleScope.launch {
+                            delay(SEARCH_DEBOUNCE_MS)
+                            runSearch(newText)
+                        }
+                    return true
                 }
-                return true
-            }
-        })
+            },
+        )
     }
 
     private fun runSearch(query: String) {
@@ -230,7 +237,7 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    LOCATION_PERMISSION_REQUEST
+                    LOCATION_PERMISSION_REQUEST,
                 )
             }
         }
@@ -250,20 +257,22 @@ class MainActivity : AppCompatActivity() {
 
         // CompassLocationProvider handles network + GPS + magnetometer internally.
         val provider = CompassLocationProvider(this)
-        val arrow = locationArrowBitmap ?: drawableToBitmap(R.drawable.ic_location_arrow, 36)
-            .also { locationArrowBitmap = it }
+        val arrow =
+            locationArrowBitmap ?: drawableToBitmap(R.drawable.ic_location_arrow, 36)
+                .also { locationArrowBitmap = it }
 
-        val overlay = MyLocationNewOverlay(provider, map).apply {
-            setDirectionArrow(arrow, arrow)
-            enableMyLocation()
-            runOnFirstFix {
-                runOnUiThread {
-                    map.controller.animateTo(myLocation)
-                    map.post { map.invalidate() }
-                    setFabAcquiring(false)
+        val overlay =
+            MyLocationNewOverlay(provider, map).apply {
+                setDirectionArrow(arrow, arrow)
+                enableMyLocation()
+                runOnFirstFix {
+                    runOnUiThread {
+                        map.controller.animateTo(myLocation)
+                        map.post { map.invalidate() }
+                        setFabAcquiring(false)
+                    }
                 }
             }
-        }
 
         // Remove any stale overlay before adding the new one.
         locationOverlay?.let { map.overlays.remove(it) }
@@ -278,7 +287,10 @@ class MainActivity : AppCompatActivity() {
         binding.fabMyLocation.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color))
     }
 
-    private fun drawableToBitmap(resId: Int, sizeDp: Int): Bitmap {
+    private fun drawableToBitmap(
+        resId: Int,
+        sizeDp: Int,
+    ): Bitmap {
         val scale = resources.displayMetrics.density
         val px = (sizeDp * scale).toInt()
         val drawable = ResourcesCompat.getDrawable(resources, resId, theme)!!
@@ -291,12 +303,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun hasLocationPermission(): Boolean =
         ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED
+            PackageManager.PERMISSION_GRANTED
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST &&

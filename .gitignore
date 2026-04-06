@@ -4,7 +4,6 @@ app/build/
 
 # Gradle
 .gradle/
-gradle/wrapper/gradle-wrapper.jar
 local.properties
 
 # Android Studio / IntelliJ
@@ -19,6 +18,3 @@ captures/
 # OS
 .DS_Store
 Thumbs.db
-
-# API keys — never commit
-app/src/main/java/rs/wllrg/util/ApiKeys.kt

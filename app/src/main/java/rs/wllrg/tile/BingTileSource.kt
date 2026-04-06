@@ -1,9 +1,9 @@
 package rs.wllrg.tile
 
 import android.util.Log
-import rs.wllrg.util.ApiKeys
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.util.MapTileIndex
+import rs.wllrg.BuildConfig
 
 /**
  * OSMDroid tile source backed by Bing Maps Virtual Earth, with the OS Leisure
@@ -19,16 +19,19 @@ import org.osmdroid.util.MapTileIndex
  */
 class BingTileSource : OnlineTileSourceBase(
     "Bing OS Maps",
-    12,  // minimum zoom — OS Explorer tiles only exist from zoom 12 upwards
-    17,  // maximum zoom — tiles return blank above zoom 17
-    256, // tile size in pixels
+    // OS Explorer tiles only exist from zoom 12 upwards
+    12,
+    // tiles return blank above zoom 17
+    17,
+    // tile size in pixels
+    256,
     ".png",
     arrayOf(
         "https://ecn.t0.tiles.virtualearth.net",
         "https://ecn.t1.tiles.virtualearth.net",
         "https://ecn.t2.tiles.virtualearth.net",
-        "https://ecn.t3.tiles.virtualearth.net"
-    )
+        "https://ecn.t3.tiles.virtualearth.net",
+    ),
 ) {
     override fun getTileURLString(pMapTileIndex: Long): String {
         val zoom = MapTileIndex.getZoom(pMapTileIndex)
@@ -36,8 +39,9 @@ class BingTileSource : OnlineTileSourceBase(
         val y = MapTileIndex.getY(pMapTileIndex)
         val quadkey = encodeQuadkey(x, y, zoom)
         val stripe = (x + y) % 4
-        val url = "https://ecn.t$stripe.tiles.virtualearth.net/tiles/r$quadkey" +
-                "?g=3455&lbl=l1&productSet=mmOS&key=${ApiKeys.BING_MAPS_KEY}"
+        val url =
+            "https://ecn.t$stripe.tiles.virtualearth.net/tiles/r$quadkey" +
+                "?g=3455&lbl=l1&productSet=mmOS&key=${BuildConfig.BING_MAPS_KEY}"
         Log.d("BingTileSource", "Requesting z=$zoom x=$x y=$y quadkey=$quadkey")
         return url
     }
@@ -47,7 +51,11 @@ class BingTileSource : OnlineTileSourceBase(
      * At each zoom level the digit encodes which quadrant (NW=0,NE=1,SW=2,SE=3)
      * the tile falls into, reading from the most-significant level down.
      */
-    private fun encodeQuadkey(x: Int, y: Int, zoom: Int): String {
+    private fun encodeQuadkey(
+        x: Int,
+        y: Int,
+        zoom: Int,
+    ): String {
         val digits = CharArray(zoom)
         var tx = x
         var ty = y
