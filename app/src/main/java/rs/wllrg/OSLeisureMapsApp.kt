@@ -7,9 +7,10 @@ import java.io.File
 class OSLeisureMapsApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        // Set a descriptive User-Agent (required by OSMDroid / tile servers)
-        Configuration.getInstance().userAgentValue = "OSLeisureMaps/1.0 (Android)"
-        // Cache tiles in app's private cache directory
-        Configuration.getInstance().osmdroidTileCache = File(cacheDir, "osmdroid")
+        Configuration.getInstance().apply {
+            userAgentValue = "OSMaps/1.0 (Android)"
+            osmdroidTileCache = File(cacheDir, "tiles")
+            cacheMapTileCount = 256.toShort()
+        }
     }
 }
