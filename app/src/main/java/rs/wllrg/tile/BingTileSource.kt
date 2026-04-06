@@ -3,7 +3,7 @@ package rs.wllrg.tile
 import android.util.Log
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.util.MapTileIndex
-import rs.wllrg.util.ApiKeys
+import rs.wllrg.BuildConfig
 
 /**
  * OSMDroid tile source backed by Bing Maps Virtual Earth, with the OS Leisure
@@ -41,7 +41,7 @@ class BingTileSource : OnlineTileSourceBase(
         val stripe = (x + y) % 4
         val url =
             "https://ecn.t$stripe.tiles.virtualearth.net/tiles/r$quadkey" +
-                "?g=3455&lbl=l1&productSet=mmOS&key=${ApiKeys.BING_MAPS_KEY}"
+                "?g=3455&lbl=l1&productSet=mmOS&key=${BuildConfig.BING_MAPS_KEY}"
         Log.d("BingTileSource", "Requesting z=$zoom x=$x y=$y quadkey=$quadkey")
         return url
     }

@@ -2,7 +2,7 @@ package rs.wllrg.tile
 
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.util.MapTileIndex
-import rs.wllrg.util.ApiKeys
+import rs.wllrg.BuildConfig
 
 /**
  * OSMDroid tile source backed by the OS Maps API (Leisure_3857 layer).
@@ -28,6 +28,6 @@ class OSTileSource : OnlineTileSourceBase(
         val zoom = MapTileIndex.getZoom(pMapTileIndex)
         val x = MapTileIndex.getX(pMapTileIndex)
         val y = MapTileIndex.getY(pMapTileIndex)
-        return "https://api.os.uk/maps/raster/v1/zxy/Leisure_3857/$zoom/$x/$y.png?key=${ApiKeys.OS_MAPS_KEY}"
+        return "https://api.os.uk/maps/raster/v1/zxy/Leisure_3857/$zoom/$x/$y.png?key=${BuildConfig.OS_MAPS_KEY}"
     }
 }

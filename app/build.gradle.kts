@@ -1,8 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ktlint)
 }
+
+// Read API keys from local.properties (not committed to VCS).
+// Falls back to empty strings so CI builds compile without secrets.
+val localProps =
+    Properties().apply {
+        val f = rootProject.file("local.properties")
+        if (f.exists()) load(f.inputStream())
+    }
 
 android {
     namespace = "rs.wllrg"
@@ -14,6 +24,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "BING_MAPS_KEY", "\"${localProps["bingMapsKey"] ?: ""}\"")
+        buildConfigField("String", "OS_MAPS_KEY", "\"${localProps["osMapsKey"] ?: ""}\"")
     }
 
     buildTypes {
@@ -28,6 +41,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {

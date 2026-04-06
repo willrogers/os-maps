@@ -122,8 +122,8 @@ class MainActivity : AppCompatActivity() {
      * Throws if the API key is still the placeholder, so we fall back to Bing.
      */
     private fun validateKey(sourceName: String) {
-        val key = rs.wllrg.util.ApiKeys.OS_MAPS_KEY
-        if (key == "YOUR_OS_MAPS_API_KEY") {
+        val key = BuildConfig.OS_MAPS_KEY
+        if (key.isBlank() || key == "YOUR_OS_MAPS_API_KEY") {
             throw IllegalStateException("OS Maps API key not set for $sourceName")
         }
     }

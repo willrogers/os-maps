@@ -16,6 +16,6 @@ repos:
       - id: ktlint
         name: ktlint
         language: system
-        entry: ./gradlew ktlintFormat
+        entry: ./gradlew :app:ktlintFormat
         pass_filenames: false
         types: [kotlin]

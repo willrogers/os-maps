@@ -32,11 +32,17 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      - name: Create local.properties for CI
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" >> local.properties
+          echo "bingMapsKey=" >> local.properties
+          echo "osMapsKey=" >> local.properties
+
       - name: Run Android lint
-        run: ./gradlew lint
+        run: ./gradlew :app:lint
 
       - name: Run ktlint
-        run: ./gradlew ktlintCheck
+        run: ./gradlew :app:ktlintCheck
 
       - name: Upload lint report
         if: always()

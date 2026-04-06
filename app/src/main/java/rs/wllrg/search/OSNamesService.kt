@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import rs.wllrg.util.ApiKeys
+import rs.wllrg.BuildConfig
 
 data class SearchResult(
     val name: String,
@@ -26,7 +26,7 @@ class OSNamesService {
     private val client = OkHttpClient()
     private val gson = Gson()
 
-    private fun osKeyIsSet() = ApiKeys.OS_MAPS_KEY != "YOUR_OS_MAPS_API_KEY"
+    private fun osKeyIsSet() = BuildConfig.OS_MAPS_KEY != "YOUR_OS_MAPS_API_KEY"
 
     suspend fun search(query: String): List<SearchResult> = if (osKeyIsSet()) searchOS(query) else searchNominatim(query)
 
@@ -40,7 +40,7 @@ class OSNamesService {
                 "https://api.os.uk/search/names/v1/find" +
                     "?query=${query.trim().encodeUrl()}" +
                     "&maxresults=10" +
-                    "&key=${ApiKeys.OS_MAPS_KEY}"
+                    "&key=${BuildConfig.OS_MAPS_KEY}"
 
             val request = Request.Builder().url(url).build()
             val response = client.newCall(request).execute()
