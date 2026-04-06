@@ -1,8 +1,8 @@
 package rs.wllrg.tile
 
-import rs.wllrg.util.ApiKeys
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.util.MapTileIndex
+import rs.wllrg.util.ApiKeys
 
 /**
  * OSMDroid tile source backed by the OS Maps API (Leisure_3857 layer).
@@ -15,11 +15,14 @@ import org.osmdroid.util.MapTileIndex
  */
 class OSTileSource : OnlineTileSourceBase(
     "OS Leisure Maps",
-    7,   // minimum zoom
-    20,  // maximum zoom
-    256, // tile size in pixels
+    // minimum zoom
+    7,
+    // maximum zoom
+    20,
+    // tile size in pixels
+    256,
     ".png",
-    arrayOf("https://api.os.uk")
+    arrayOf("https://api.os.uk"),
 ) {
     override fun getTileURLString(pMapTileIndex: Long): String {
         val zoom = MapTileIndex.getZoom(pMapTileIndex)

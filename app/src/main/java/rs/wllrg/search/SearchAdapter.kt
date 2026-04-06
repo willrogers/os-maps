@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import rs.wllrg.R
 
 class SearchAdapter(
-    private val onResultClick: (SearchResult) -> Unit
+    private val onResultClick: (SearchResult) -> Unit,
 ) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
-
     private val items = mutableListOf<SearchResult>()
 
     fun submitList(results: List<SearchResult>) {
@@ -24,13 +23,20 @@ class SearchAdapter(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_search_result, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_search_result, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         holder.bind(items[position])
     }
 

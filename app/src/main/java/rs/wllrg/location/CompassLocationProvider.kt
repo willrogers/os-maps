@@ -25,7 +25,6 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer
  */
 class CompassLocationProvider(private val context: Context) :
     GpsMyLocationProvider(context), SensorEventListener {
-
     private val sensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val windowManager =
@@ -78,26 +77,48 @@ class CompassLocationProvider(private val context: Context) :
         SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
 
         // Remap axes to account for which way the screen is currently oriented.
-        val rotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            context.display?.rotation ?: Surface.ROTATION_0
-        } else {
-            @Suppress("DEPRECATION")
-            windowManager.defaultDisplay.rotation
-        }
+        val rotation =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                context.display?.rotation ?: Surface.ROTATION_0
+            } else {
+                @Suppress("DEPRECATION")
+                windowManager.defaultDisplay.rotation
+            }
         when (rotation) {
-            Surface.ROTATION_90  -> SensorManager.remapCoordinateSystem(
-                rotationMatrix, SensorManager.AXIS_Z, SensorManager.AXIS_MINUS_X, remappedMatrix)
-            Surface.ROTATION_180 -> SensorManager.remapCoordinateSystem(
-                rotationMatrix, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_MINUS_Z, remappedMatrix)
-            Surface.ROTATION_270 -> SensorManager.remapCoordinateSystem(
-                rotationMatrix, SensorManager.AXIS_MINUS_Z, SensorManager.AXIS_X, remappedMatrix)
-            else                 -> SensorManager.remapCoordinateSystem(
-                rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, remappedMatrix)
+            Surface.ROTATION_90 ->
+                SensorManager.remapCoordinateSystem(
+                    rotationMatrix,
+                    SensorManager.AXIS_Z,
+                    SensorManager.AXIS_MINUS_X,
+                    remappedMatrix,
+                )
+            Surface.ROTATION_180 ->
+                SensorManager.remapCoordinateSystem(
+                    rotationMatrix,
+                    SensorManager.AXIS_MINUS_X,
+                    SensorManager.AXIS_MINUS_Z,
+                    remappedMatrix,
+                )
+            Surface.ROTATION_270 ->
+                SensorManager.remapCoordinateSystem(
+                    rotationMatrix,
+                    SensorManager.AXIS_MINUS_Z,
+                    SensorManager.AXIS_X,
+                    remappedMatrix,
+                )
+            else ->
+                SensorManager.remapCoordinateSystem(
+                    rotationMatrix,
+                    SensorManager.AXIS_X,
+                    SensorManager.AXIS_Z,
+                    remappedMatrix,
+                )
         }
 
         SensorManager.getOrientation(remappedMatrix, orientation)
-        val azimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
-            .let { if (it < 0f) it + 360f else it }
+        val azimuth =
+            Math.toDegrees(orientation[0].toDouble()).toFloat()
+                .let { if (it < 0f) it + 360f else it }
 
         // Low-pass filter using shortest angular path to avoid 359° → 1° flipping.
         smoothedBearing += 0.15f * angularDiff(smoothedBearing, azimuth)
@@ -109,13 +130,19 @@ class CompassLocationProvider(private val context: Context) :
         mainHandler.post { consumer?.onLocationChanged(updated, this) }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+    override fun onAccuracyChanged(
+        sensor: Sensor,
+        accuracy: Int,
+    ) {}
 
     // -------------------------------------------------------------------------
 
-    private fun angularDiff(from: Float, to: Float): Float {
+    private fun angularDiff(
+        from: Float,
+        to: Float,
+    ): Float {
         var d = to - from
-        while (d > 180f)  d -= 360f
+        while (d > 180f) d -= 360f
         while (d < -180f) d += 360f
         return d
     }
